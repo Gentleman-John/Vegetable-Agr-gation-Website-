@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Farm Tours | FreshHarvest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #3e8e41;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            margin-left: 1rem;
+        }
+        
+        .btn-outline:hover {
+            background: white;
+            color: #4CAF50;
+        }
+        
+        .farm-tour-section {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .farm-profile {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+        
+        .farm-info {
+            padding: 2rem;
+        }
+        
+        .farm-info h2 {
+            color: #4CAF50;
+            margin-bottom: 1rem;
+        }
+        
+        .farm-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .meta-item {
+            background: #f5f5f5;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .farm-description {
+            margin-bottom: 1.5rem;
+        }
+        
+        .sustainability-features {
+            margin-top: 1.5rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.8rem;
+            font-size: 0.8rem;
+        }
+        
+        .virtual-tour {
+            position: relative;
+            height: 400px;
+            background: #eee;
+        }
+        
+        .tour-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tour-nav {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            z-index: 10;
+        }
+        
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.8);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .farm-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .farms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .farm-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .farm-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .farm-card-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .farm-card-info {
+            padding: 1.5rem;
+        }
+        
+        .farm-card-info h3 {
+            margin-bottom: 0.5rem;
+            color: #4CAF50;
+        }
+        
+        .farm-card-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+        
+        @media (max-width: 992px) {
+            .farm-profile {
+                grid-template-columns: 1fr;
+            }
+            
+            .farm-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .farm-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-buttons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">FreshHarvest</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="farms.html" class="active">Farm Tours</a></li>
+                    <li><a href="produce.html">Produce</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Meet Your Farmers Virtually</h1>
+            <p>Explore our partner farms through 360° tours and learn about their sustainable practices.</p>
+            <div class="hero-buttons">
+                <a href="#featured-farm" class="btn">View Featured Farm</a>
+                <a href="#all-farms" class="btn btn-outline">Browse All Farms</a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="farm-tour-section" id="featured-farm">
+        <div class="container">
+            <h2 class="section-title">Featured Farm Tour</h2>
+            
+            <div class="farm-profile">
+                <div class="farm-info">
+                    <h2>Green Valley Organic Farms</h2>
+                    <div class="farm-meta">
+                        <span class="meta-item"><i class="fas fa-map-marker-alt"></i> Willamette Valley, OR</span>
+                        <span class="meta-item"><i class="fas fa-user"></i> Family-owned since 1982</span>
+                    </div>
+                    <div class="farm-description">
+                        <p>A certified organic farm specializing in heirloom vegetables and sustainable agriculture. The Johnson family has been practicing regenerative farming techniques for three generations.</p>
+                    </div>
+                    
+                    <h3>Sustainability Practices</h3>
+                    <div class="sustainability-features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                            <span>Certified Organic (USDA)</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-tint"></i></div>
+                            <span>Drip irrigation system</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-recycle"></i></div>
+                            <span>Composting program</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-solar-panel"></i></div>
+                            <span>Solar-powered operations</span>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="btn" style="margin-top: 1.5rem;">View Their Produce</a>
+                </div>
+                
+                <div class="virtual-tour">
+                    <div class="tour-container" id="pano">
+                        <!-- 360° viewer will be inserted here -->
+                        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef" alt="Farm panorama" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="tour-nav">
+                        <button class="nav-btn"><i class="fas fa-arrow-left"></i></button>
+                        <button class="nav-btn"><i class="fas fa-expand"></i></button>
+                        <button class="nav-btn"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="farm-stats">
+                <div class="stat-card">
+                    <div class="stat-value">150</div>
+                    <div>Acres Farmed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">42</div>
+                    <div>Varieties Grown</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">100%</div>
+                    <div>Organic</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">35</div>
+                    <div>Years in Business</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="farm-tour-section" id="all-farms">
+        <div class="container">
+            <h2 class="section-title">Explore More Farms</h2>
+            
+            <div class="farms-grid">
+                <div class="farm-card">
+                    <div class="farm-card-img" style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef');"></div>
+                    <div class="farm-card-info">
+                        <h3>Sunrise Organics</h3>
+                        <div class="farm-card-meta"><i class="fas fa-map-marker-alt"></i> Salinas Valley, CA</div>
+                        <p>Specializing in leafy greens with water-conservation techniques.</p>
+                        <a href="#" class="btn" style="margin-top: 1rem;">Take Virtual Tour</a>
+                    </div>
+                </div>
+                
+                <div class="farm-card">
+                    <div class="farm-card-img" style="background-image: url('https://images.unsplash.com/photo-1500595046743-cd271d694d30');"></div>
+                    <div class="farm-card-info">
+                        <h3>Harvest Hill</h3>
+                        <div class="farm-card-meta"><i class="fas fa-map-marker-alt"></i> Hudson Valley, NY</div>
+                        <p>Regenerative farm focusing on root vegetables and soil health.</p>
+                        <a href="#" class="btn" style="margin-top: 1rem;">Take Virtual Tour</a>
+                    </div>
+                </div>
+                
+                <div class="farm-card">
+                    <div class="farm-card-img" style="background-image: url('https://images.unsplash.com/photo-1464226184884-fa280b87c399');"></div>
+                    <div class="farm-card-info">
+                        <h3>Valley View Farms</h3>
+                        <div class="farm-card-meta"><i class="fas fa-map-marker-alt"></i> Shenandoah Valley, VA</div>
+                        <p>Diversified farm with integrated livestock and crops.</p>
+                        <a href="#" class="btn" style="margin-top: 1rem;">Take Virtual Tour</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FreshHarvest</h3>
+                    <p>Connecting you with sustainable farms.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Farm Resources</h3>
+                    <ul>
+                        <li><a href="#">Join Our Network</a></li>
+                        <li><a href="#">Sustainability Guidelines</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> farms@freshharvest.com</li>
+                        <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 FreshHarvest. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- For a real implementation, you would include a 360° viewer library like:
+    <script src="https://cdn.jsdelivr.net/npm/panolens@0.11.0/build/panolens.min.js"></script>
+    -->
+    <script>
+        // This would be replaced with actual 360° viewer implementation
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('In a full implementation, this would navigate the 360° viewer');
+            });
+        });
+        
+        // Simulate loading different farm views
+        document.querySelectorAll('.farm-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if(e.target.tagName !== 'A') {
+                    const farmName = this.querySelector('h3').textContent;
+                    alert(`Loading virtual tour for ${farmName}`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

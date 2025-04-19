@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seasonal Produce Calendar | FreshHarvest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542838132-92c53300491e');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .calendar-intro {
+            padding: 3rem 0;
+            text-align: center;
+            background: #f5f5f5;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .calendar-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        
+        .calendar-container {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+            overflow-x: auto;
+        }
+        
+        .calendar {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        .calendar th {
+            background: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .calendar td {
+            border: 1px solid #eee;
+            padding: 0.5rem;
+            vertical-align: top;
+            height: 100px;
+        }
+        
+        .month-header {
+            background: #e8f5e9;
+            font-weight: bold;
+            text-align: center;
+            padding: 0.5rem;
+        }
+        
+        .produce-item {
+            background: #e8f5e9;
+            border-radius: 4px;
+            padding: 0.3rem 0.5rem;
+            margin-bottom: 0.3rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .produce-item:hover {
+            transform: translateX(3px);
+        }
+        
+        .leafy { background: #c8e6c9; }
+        .fruits { background: #ffccbc; }
+        .roots { background: #d7ccc8; }
+        .herbs { background: #c5cae9; }
+        
+        .produce-details {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+        
+        .produce-details.active {
+            display: block;
+        }
+        
+        .detail-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-header img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 1.5rem;
+        }
+        
+        .detail-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .meta-item {
+            background: #f5f5f5;
+            padding: 0.8rem;
+            border-radius: 4px;
+            min-width: 120px;
+        }
+        
+        .meta-item h4 {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #3e8e41;
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-column ul li a {
+            color: #ddd;
+            text-decoration: none;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #555;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .detail-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .detail-header img {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .detail-meta {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">FreshHarvest</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="produce.html">Produce</a></li>
+                    <li><a href="farmers.html">Farmers</a></li>
+                    <li><a href="buyers.html">Buyers</a></li>
+                    <li><a href="calendar.html" class="active">Seasonal Calendar</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Seasonal Produce Calendar</h1>
+            <p>Discover when fruits and vegetables are at their peak freshness in your region.</p>
+        </div>
+    </section>
+    
+    <section class="calendar-intro">
+        <div class="container">
+            <h2 class="section-title">Plan Your Harvest or Menu</h2>
+            <p>Our interactive calendar shows optimal growing and harvesting periods for various produce. Click on items for detailed information.</p>
+            
+            <div class="calendar-controls">
+                <button class="filter-btn active" onclick="filterProduce('all')">All Produce</button>
+                <button class="filter-btn" onclick="filterProduce('leafy')">Leafy Greens</button>
+                <button class="filter-btn" onclick="filterProduce('fruits')">Fruiting Vegetables</button>
+                <button class="filter-btn" onclick="filterProduce('roots')">Root Vegetables</button>
+                <button class="filter-btn" onclick="filterProduce('herbs')">Herbs</button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="container">
+        <div class="calendar-container">
+            <table class="calendar">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Early Season</th>
+                        <th>Peak Season</th>
+                        <th>Late Season</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="month-header">January</td>
+                        <td>
+                            <div class="produce-item leafy" onclick="showDetails('kale')">Kale</div>
+                            <div class="produce-item roots" onclick="showDetails('carrots')">Carrots</div>
+                        </td>
+                        <td>
+                            <div class="produce-item leafy" onclick="showDetails('spinach')">Spinach</div>
+                            <div class="produce-item roots" onclick="showDetails('beets')">Beets</div>
+                        </td>
+                        <td>
+                            <div class="produce-item roots" onclick="showDetails('potatoes')">Potatoes</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="month-header">February</td>
+                        <td>
+                            <div class="produce-item leafy" onclick="showDetails('lettuce')">Lettuce</div>
+                        </td>
+                        <td>
+                            <div class="produce-item leafy" onclick="showDetails('kale')">Kale</div>
+                            <div class="produce-item roots" onclick="showDetails('carrots')">Carrots</div>
+                        </td>
+                        <td>
+                            <div class="produce-item leafy" onclick="showDetails('spinach')">Spinach</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="month-header">March</td>
+                        <td>
+                            <div class="produce-item leafy" onclick="showDetails('arugula')">Arugula</div>
+                        </td>
+                        <td>
+                            <div class="produce-item leafy" onclick="showDetails('lettuce')">Lettuce</div>
+                            <div class="produce-item herbs" onclick="showDetails('parsley')">Parsley</div>
+                        </td>
+                        <td>
+                            <div class="produce-item roots" onclick="showDetails('radishes')">Radishes</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="month-header">April</td>
+                        <td>
+                            <div class="produce-item fruits" onclick="showDetails('strawberries')">Strawberries</div>
+                        </td>
+                        <td>
+                            <div class="produce-item leafy" onclick="showDetails('arugula')">Arugula</div>
+                            <div class="produce-item herbs" onclick="showDetails('cilantro')">Cilantro</div>
+                        </td>
+                        <td>
+                            <div class="produce-item leafy" onclick="showDetails('lettuce')">Lettuce</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="month-header">May</td>
+                        <td>
+                            <div class="produce-item fruits" onclick="showDetails('tomatoes')">Tomatoes</div>
+                        </td>
+                        <td>
+                            <div class="produce-item fruits" onclick="showDetails('strawberries')">Strawberries</div>
+                            <div class="produce-item leafy" onclick="showDetails('chard')">Chard</div>
+                        </td>
+                        <td>
+                            <div class="produce-item herbs" onclick="showDetails('basil')">Basil</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="month-header">June</td>
+                        <td>
+                            <div class="produce-item fruits" onclick="showDetails('zucchini')">Zucchini</div>
+                        </td>
+                        <td>
+                            <div class="produce-item fruits" onclick="showDetails('tomatoes')">Tomatoes</div>
+                            <div class="produce-item fruits" onclick="showDetails('peppers')">Peppers</div>
+                        </td>
+                        <td>
+                            <div class="produce-item fruits" onclick="showDetails('strawberries')">Strawberries</div>
+                        </td>
+                    </tr>
+                    <!-- Additional months would continue here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Produce Details Panel -->
+        <div id="produce-details" class="produce-details">
+            <div class="detail-header">
+                <img id="detail-image" src="https://cdn-icons-png.flaticon.com/512/2909/2909896.png" alt="Produce">
+                <div>
+                    <h2 id="detail-title">Tomatoes</h2>
+                    <p id="detail-category">Fruiting Vegetable</p>
+                </div>
+            </div>
+            
+            <div class="detail-meta">
+                <div class="meta-item">
+                    <h4>Peak Season</h4>
+                    <p id="detail-season">June - September</p>
+                </div>
+                <div class="meta-item">
+                    <h4>Best Regions</h4>
+                    <p id="detail-regions">Temperate climates</p>
+                </div>
+                <div class="meta-item">
+                    <h4>Avg. Price</h4>
+                    <p id="detail-price">$1.89/lb</p>
+                </div>
+                <div class="meta-item">
+                    <h4>Popular Varieties</h4>
+                    <p id="detail-varieties">Heirloom, Cherry, Roma</p>
+                </div>
+            </div>
+            
+            <div id="detail-description">
+                <p>Tomatoes are warm-season crops that thrive in full sun. They come in many varieties suitable for different culinary uses, from salads to sauces. Harvest when fully colored but still firm.</p>
+                <p><strong>Storage Tip:</strong> Store at room temperature until fully ripe, then refrigerate.</p>
+            </div>
+            
+            <button class="btn" style="margin-top: 1.5rem;">Find Farmers Selling This</button>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FreshHarvest</h3>
+                    <p>Connecting you with the freshest seasonal produce.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Growing Guides</a></li>
+                        <li><a href="#">Recipe Ideas</a></li>
+                        <li><a href="#">Farmers Markets</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@freshharvest.com</li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 FreshHarvest. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample produce data
+        const produceData = {
+            'tomatoes': {
+                title: 'Tomatoes',
+                category: 'Fruiting Vegetable',
+                season: 'June - September',
+                regions: 'Temperate climates',
+                price: '$1.89/lb',
+                varieties: 'Heirloom, Cherry, Roma',
+                description: 'Tomatoes are warm-season crops that thrive in full sun. They come in many varieties suitable for different culinary uses, from salads to sauces. Harvest when fully colored but still firm.',
+                image: 'https://cdn-icons-png.flaticon.com/512/2909/2909896.png'
+            },
+            'spinach': {
+                title: 'Spinach',
+                category: 'Leafy Green',
+                season: 'March - May, September - November',
+                regions: 'Cooler climates',
+                price: '$3.29/lb',
+                varieties: 'Savoy, Flat-leaf, Baby',
+                description: 'Spinach grows best in cool weather and can be harvested as cut-and-come-again crop. Rich in iron and vitamins, it\'s perfect for salads and cooking.',
+                image: 'https://cdn-icons-png.flaticon.com/512/2909/2909766.png'
+            },
+            'carrots': {
+                title: 'Carrots',
+                category: 'Root Vegetable',
+                season: 'June - October',
+                regions: 'Most regions',
+                price: '$0.99/lb',
+                varieties: 'Nantes, Danvers, Imperator',
+                description: 'Carrots prefer loose, sandy soil for straight growth. Sweetest when harvested after cool nights. Store in cool, humid conditions.',
+                image: 'https://cdn-icons-png.flaticon.com/512/2909/2909943.png'
+            }
+            // Additional produce items would be added here
+        };
+
+        // Show details when produce is clicked
+        function showDetails(produceId) {
+            const detailsPanel = document.getElementById('produce-details');
+            const produce = produceData[produceId];
+            
+            if (produce) {
+                document.getElementById('detail-title').textContent = produce.title;
+                document.getElementById('detail-category').textContent = produce.category;
+                document.getElementById('detail-season').textContent = produce.season;
+                document.getElementById('detail-regions').textContent = produce.regions;
+                document.getElementById('detail-price').textContent = produce.price;
+                document.getElementById('detail-varieties').textContent = produce.varieties;
+                document.getElementById('detail-description').innerHTML = `<p>${produce.description}</p><p><strong>Storage Tip:</strong> Store at room temperature until fully ripe, then refrigerate.</p>`;
+                document.getElementById('detail-image').src = produce.image;
+                
+                detailsPanel.classList.add('active');
+            }
+        }
+
+        // Filter produce by category
+        function filterProduce(category) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            const allItems = document.querySelectorAll('.produce-item');
+            
+            allItems.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

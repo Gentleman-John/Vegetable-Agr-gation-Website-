@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyers | FreshHarvest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542838132-92c53300491e');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #3e8e41;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            margin-left: 1rem;
+        }
+        
+        .btn-outline:hover {
+            background: white;
+            color: #4CAF50;
+        }
+        
+        .benefits {
+            padding: 4rem 0;
+            background: #f9f9f9;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .benefit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .benefit-card i {
+            font-size: 2.5rem;
+            color: #4CAF50;
+            margin-bottom: 1rem;
+        }
+        
+        .benefit-card h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .buyer-types {
+            padding: 4rem 0;
+        }
+        
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .type-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .type-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .type-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .type-info {
+            padding: 1.5rem;
+        }
+        
+        .type-info h3 {
+            margin-bottom: 0.5rem;
+            color: #4CAF50;
+        }
+        
+        .how-it-works {
+            padding: 4rem 0;
+            background: #f5f5f5;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            counter-reset: step-counter;
+        }
+        
+        .step {
+            position: relative;
+            padding: 2rem 1.5rem 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .step::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .step h3 {
+            margin-bottom: 1rem;
+            color: #4CAF50;
+        }
+        
+        .testimonials {
+            padding: 4rem 0;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .testimonial {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .business-type {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .signup-cta {
+            padding: 4rem 0;
+            background: linear-gradient(rgba(76, 175, 80, 0.9), rgba(76, 175, 80, 0.9)), url('https://images.unsplash.com/photo-1606787366850-de6330128bfc');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .signup-cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .signup-cta p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-column ul li a {
+            color: #ddd;
+            text-decoration: none;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #555;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">FreshHarvest</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="farmers.html">Farmers</a></li>
+                    <li><a href="buyers.html" class="active">Buyers</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Source Fresh Produce Directly From Farmers</h1>
+            <p>Get consistent supply of high-quality vegetables at competitive prices, with reliable delivery to your business.</p>
+            <div class="hero-buttons">
+                <a href="#signup" class="btn">Become a Buyer</a>
+                <a href="#products" class="btn btn-outline">View Available Produce</a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <h2 class="section-title">Benefits for Buyers</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Quality Assurance</h3>
+                    <p>Farm-fresh produce harvested at peak ripeness, with strict quality control standards.</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>Competitive Pricing</h3>
+                    <p>Better prices by eliminating middlemen and buying directly from source.</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Reliable Supply</h3>
+                    <p>Consistent availability year-round through our network of farmers.</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-truck"></i>
+                    <h3>Flexible Delivery</h3>
+                    <p>Custom delivery schedules to match your business needs.</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-seedling"></i>
+                    <h3>Traceability</h3>
+                    <p>Know exactly which farms your produce comes from.</p>
+                </div>
+                <div class="benefit-card">
+                    <i class="fas fa-list-alt"></i>
+                    <h3>Custom Orders</h3>
+                    <p>Request specific varieties, sizes, or packaging to meet your requirements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="buyer-types">
+        <div class="container">
+            <h2 class="section-title">Who We Serve</h2>
+            <div class="types-grid">
+                <div class="type-card">
+                    <div class="type-img" style="background-image: url('https://images.unsplash.com/photo-1550583724-b2692b85b150');"></div>
+                    <div class="type-info">
+                        <h3>Restaurants</h3>
+                        <p>Get the freshest ingredients delivered to your kitchen, with consistent quality your chefs will love.</p>
+                    </div>
+                </div>
+                <div class="type-card">
+                    <div class="type-img" style="background-image: url('https://images.unsplash.com/photo-1606787366850-de6330128bfc');"></div>
+                    <div class="type-info">
+                        <h3>Grocery Stores</h3>
+                        <p>Stock your shelves with locally-sourced produce that sells faster and stays fresh longer.</p>
+                    </div>
+                </div>
+                <div class="type-card">
+                    <div class="type-img" style="background-image: url('https://images.unsplash.com/photo-1601493700631-2b16ec4b4716');"></div>
+                    <div class="type-info">
+                        <h3>Food Processors</h3>
+                        <p>Large-volume orders with specifications tailored to your processing needs.</p>
+                    </div>
+                </div>
+                <div class="type-card">
+                    <div class="type-img" style="background-image: url('https://images.unsplash.com/photo-1512152272829-e3139592d56f');"></div>
+                    <div class="type-info">
+                        <h3>Institutions</h3>
+                        <p>Schools, hospitals and corporate cafeterias can offer healthier meals with our fresh produce.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works For Buyers</h2>
+            <div class="steps">
+                <div class="step">
+                    <h3>Create Account</h3>
+                    <p>Register your business and tell us about your produce needs and delivery requirements.</p>
+                </div>
+                <div class="step">
+                    <h3>Browse Available Produce</h3>
+                    <p>View real-time inventory from our network of farmers with current prices and specs.</p>
+                </div>
+                <div class="step">
+                    <h3>Place Your Order</h3>
+                    <p>Order online or work with our account managers for large or custom orders.</p>
+                </div>
+                <div class="step">
+                    <h3>Receive Delivery</h3>
+                    <p>Get your order delivered fresh to your location on your schedule.</p>
+                </div>
+                <div class="step">
+                    <h3>Pay Securely</h3>
+                    <p>Convenient payment options including net terms for qualified buyers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Buyers Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        "Switching to FreshHarvest cut our produce costs by 18% while improving quality. The reliable delivery means we never run out of key ingredients during busy service."
+                    </div>
+                    <div class="testimonial-author">Maria Gonzalez</div>
+                    <div class="business-type">Executive Chef, Bistro Moderno</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        "Our customers notice the difference in freshness and we've seen a 22% increase in produce sales since switching to FreshHarvest. The farm stories we can share also help build trust."
+                    </div>
+                    <div class="testimonial-author">James Wilson</div>
+                    <div class="business-type">Produce Manager, Green Valley Market</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        "As a food service provider for schools, we appreciate the consistent sizing and quality that makes our prep work more efficient. The volume discounts on large orders help our budget too."
+                    </div>
+                    <div class="testimonial-author">Susan Park</div>
+                    <div class="business-type">Director, Nutrition First School Programs</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="signup-cta" id="signup">
+        <div class="container">
+            <h2>Ready to Get Started?</h2>
+            <p>Join our network of buyers and start receiving farm-fresh produce delivered to your business. Our team will work with you to understand your needs and match you with the right farmers.</p>
+            <a href="#" class="btn">Sign Up as a Buyer</a>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FreshHarvest</h3>
+                    <p>Bridging the gap between farmers and food businesses.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Buyer Resources</h3>
+                    <ul>
+                        <li><a href="#">Product Catalog</a></li>
+                        <li><a href="#">Seasonal Availability</a></li>
+                        <li><a href="#">Ordering Guide</a></li>
+                        <li><a href="#">Quality Standards</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Buyer Support</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Farm Lane, Agricity</li>
+                        <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                        <li><i class="fas fa-envelope"></i> buyers@freshharvest.com</li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 FreshHarvest. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
