@@ -2,3 +2,15 @@ modules = ["web", "python-base-3.13"]
 
 [nix]
 channel = "stable-24_05"
+
+[workflows]
+runButton = "Run Weather Forecast"
+
+[[workflows.workflow]]
+name = "Run Weather Forecast"
+author = 16481041
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python \"Maseno weather forecast code\""

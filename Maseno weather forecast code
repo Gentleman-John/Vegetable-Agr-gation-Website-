@@ -1,0 +1,23 @@
+import os
+import requests
+
+API_KEY = os.getenv("OPENWEATHER_API_KEY")
+
+def get_maseno_weather():
+    """Fetches weather data for Maseno, Kenya from OpenWeatherMap API."""
+    base_url = "http://api.openweathermap.org/data/2.5/weather?"
+    city_name = "Maseno,ke"
+    complete_url = f"{base_url}appid={API_KEY}&q={city_name}"
+    response = requests.get(complete_url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+if __name__ == "__main__":
+    weather_data = get_maseno_weather()
+    if weather_data:
+        print(f"Weather in Maseno: {weather_data['weather'][0]['description']}")
+        print(f"Temperature: {weather_data['main']['temp']} K")  #Temperature in Kelvin.
+    else:
+        print("Error fetching weather data.")
