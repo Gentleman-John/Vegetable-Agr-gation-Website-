@@ -2,9 +2,20 @@ import requests
 from datetime import datetime
 
 class MasenoWeatherForecaster:
+    """
+    A weather forecasting tool specifically designed for farmers in Maseno, Kenya.
+    Provides crop-specific agricultural recommendations based on weather forecasts.
+    """
+    
     def __init__(self, api_key):
+        """
+        Initialize the weather forecaster with OpenWeatherMap API key.
+        
+        Args:
+            api_key (str): Your OpenWeatherMap API key
+        """
         self.base_url = "http://api.openweathermap.org/data/2.5/forecast"
-        self.api_key = api_key
+        self.api_key = "45376de06a00d425f010657e6ac20fa1"
         self.maseno_coords = {'lat': -0.0036, 'lon': 34.6069}  # Maseno coordinates
         self.crop_data = {
             'maize': {'optimal_temp': (18, 28), 'water_needs': 500, 'risk_temp': 35},
@@ -12,16 +23,16 @@ class MasenoWeatherForecaster:
             'sugarcane': {'optimal_temp': (20, 32), 'water_needs': 1500, 'risk_temp': 38},
             'bananas': {'optimal_temp': (20, 30), 'water_needs': 1000, 'risk_temp': 35}
         }
-
+    
     def get_weather_forecast(self):
-        """Fetch 5-day weather forecast for Maseno"""
+        """Fetch 5-day weather forecast for Maseno from OpenWeatherMap API"""
         params = {
             'lat': self.maseno_coords['lat'],
             'lon': self.maseno_coords['lon'],
             'appid': self.api_key,
             'units': 'metric'
         }
-
+        
         try:
             response = requests.get(self.base_url, params=params)
             response.raise_for_status()
@@ -29,15 +40,24 @@ class MasenoWeatherForecaster:
         except requests.exceptions.RequestException as e:
             print(f"⚠️ Error fetching weather data: {e}")
             return None
-
+    
     def analyze_forecast(self, forecast_data, crop_type='maize'):
-        """Analyze weather for farming recommendations"""
+        """
+        Analyze weather forecast for farming recommendations.
+        
+        Args:
+            forecast_data (dict): Weather data from OpenWeatherMap API
+            crop_type (str): Crop to analyze for (maize, beans, sugarcane, bananas)
+            
+        Returns:
+            list: Daily weather analysis and recommendations
+        """
         if not forecast_data:
             return None
-
+            
         crop_info = self.crop_data.get(crop_type, self.crop_data['maize'])
         daily_data = {}
-
+        
         # Group 3-hour forecasts into daily summaries
         for item in forecast_data['list']:
             date = datetime.fromtimestamp(item['dt']).strftime('%Y-%m-%d')
@@ -50,100 +70,112 @@ class MasenoWeatherForecaster:
                     'min_temp': float('inf'),
                     'weather_conditions': set()
                 }
-
+            
             temp = item['main']['temp']
             daily_data[date]['temp_sum'] += temp
             daily_data[date]['temp_count'] += 1
             daily_data[date]['max_temp'] = max(daily_data[date]['max_temp'], temp)
             daily_data[date]['min_temp'] = min(daily_data[date]['min_temp'], temp)
-
+            
             if 'rain' in item:
                 daily_data[date]['rain_sum'] += item['rain'].get('3h', 0)
-
+            
             daily_data[date]['weather_conditions'].update(
                 w['main'] for w in item['weather']
             )
-
+        
         # Generate daily insights
         insights = []
         for date, data in daily_data.items():
             avg_temp = data['temp_sum'] / data['temp_count']
             total_rain = data['rain_sum']
-
+            
             recommendations = []
-
+            
             # Temperature checks
             if data['max_temp'] > crop_info['risk_temp']:
                 recommendations.append("🔥 **High heat warning!** Shade young crops.")
             elif avg_temp < crop_info['optimal_temp'][0]:
-                recommendations.append("❄️ **Cool temps!** Growth may slow.")
-
-            # Rainfall advice
-            if total_rain < 5:
-                recommendations.append("🌵 **Low rainfall!** Irrigate if possible.")
-            elif total_rain > 20:
-                recommendations.append("🌧️ **Heavy rain!** Check drainage.")
-
-            # Special conditions
+                recommendations.append("❄️ **Cool weather alert** - Consider delayed planting.")
+            elif avg_temp > crop_info['optimal_temp'][1]:
+                recommendations.append("☀️ **Warm weather** - Ensure adequate irrigation.")
+            else:
+                recommendations.append("🌤 **Optimal temperatures** for growth.")
+            
+            # Rainfall analysis (convert mm to liters per hectare)
+            rain_liters = total_rain * 10  # 1mm = 10,000 liters per hectare
+            if rain_liters < crop_info['water_needs'] * 0.3:
+                recommendations.append("🏜 **Drought risk** - Irrigation required")
+            elif rain_liters > crop_info['water_needs'] * 1.5:
+                recommendations.append("🌧 **Excess rainfall** - Watch for waterlogging")
+            
+            # Weather conditions
             if 'Thunderstorm' in data['weather_conditions']:
-                recommendations.append("⚡ **Thunderstorm coming!** Secure crops.")
-
+                recommendations.append("⚡ **Storm warning** - Secure crops and equipment")
+            if 'Fog' in data['weather_conditions']:
+                recommendations.append("🌫 **Fog alert** - May increase disease risk")
+            
             insights.append({
                 'date': date,
                 'avg_temp': round(avg_temp, 1),
                 'max_temp': round(data['max_temp'], 1),
                 'min_temp': round(data['min_temp'], 1),
                 'total_rain': round(total_rain, 1),
-                'conditions': ', '.join(data['weather_conditions']),
                 'recommendations': recommendations
             })
-
+        
         return insights
-
-    def format_for_sms(self, insights, crop_type='maize'):
-        """Convert into SMS-friendly text"""
-        if not insights:
-            return "⚠️ Hata ya hali ya hewa haipatikani. Jaribu tena baadaye."
-
-        message = [
-            f"⛅ **Hali ya Hewa Maseno ({crop_type.capitalize()})** ⛅",
-            f"Muda: {datetime.now().strftime('%d/%m/%Y')}\n"
+    
+    def generate_report(self, forecast_data, crop_type='maize'):
+        """
+        Generate a printable farming advisory report.
+        
+        Args:
+            forecast_data (dict): Weather data from OpenWeatherMap API
+            crop_type (str): Crop to generate report for
+            
+        Returns:
+            str: Formatted advisory report
+        """
+        analysis = self.analyze_forecast(forecast_data, crop_type)
+        if not analysis:
+            return "⚠️ No weather data available"
+            
+        report = [
+            f"\n🌾 MASENO FARMING ADVISORY ({crop_type.upper()}) 🌾",
+            f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+            "="*50
         ]
+        
+        for day in analysis:
+            report.extend([
+                f"\n📅 {day['date']}",
+                f"🌡 Temp: {day['avg_temp']}°C (Max: {day['max_temp']}°C, Min: {day['min_temp']}°C)",
+                f"🌧 Rain: {day['total_rain']} mm",
+                "\nADVISORY:"
+            ])
+            report.extend(f"• {rec}" for rec in day['recommendations'])
+        
+        report.append("\n🌱 Happy farming! 🌱")
+        return "\n".join(report)
 
-        for day in insights:
-            msg = f"\n📅 **{day['date']}**\n"
-            msg += f"🌡️ Joto: {day['min_temp']}°C - {day['max_temp']}°C\n"
-            msg += f"💧 Mvua: {day['total_rain']}mm\n"
-            msg += f"⛅ Hali: {day['conditions']}\n"
-
-            if day['recommendations']:
-                msg += "\n🔍 **Mapendekezo:**\n"
-                for rec in day['recommendations']:
-                    msg += f"- {rec}\n"
-            else:
-                msg += "\n✅ Hali nzuri kwa mazao yako!\n"
-
-            message.append(msg)
-
-        return "\n".join(message)
 
 # Example Usage
 if __name__ == "__main__":
-    # Get API key from: https://openweathermap.org/api
-    API_KEY = "your_api_key_here"  
-
-    forecaster = MasenoWeatherForecaster(API_KEY)
+    print("Maseno Agricultural Weather Forecaster")
+    print("=====================================\n")
+    
+    # Initialize with your API key (replace with actual key)
+    forecaster = MasenoWeatherForecaster(api_key="e41e288aa9606f904fbf90f0ffb41e67")
+    
+    # Get weather data
+    print("Fetching weather forecast for Maseno...")
     weather_data = forecaster.get_weather_forecast()
-
+    
     if weather_data:
-        # Analyze for maize (can change to 'beans', 'sugarcane', 'bananas')
-        insights = forecaster.analyze_forecast(weather_data, crop_type='maize')
-        sms_message = forecaster.format_for_sms(insights, crop_type='maize')
-
-        print(sms_message)
-
-        # Save to file (can be sent via SMS/WhatsApp)
-        with open('maseno_weather_alert.txt', 'w', encoding='utf-8') as f:
-            f.write(sms_message)
+        # Analyze for different crops
+        for crop in ['maize', 'beans', 'sugarcane', 'bananas']:
+            print(f"\nGenerating report for {crop}...")
+            print(forecaster.generate_report(weather_data, crop))
     else:
-        print("Failed to fetch weather data.")
+        print("Failed to retrieve weather data. Please check your API key and internet connection.")
