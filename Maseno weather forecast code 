@@ -15,7 +15,7 @@ class MasenoWeatherForecaster:
             api_key (str): Your OpenWeatherMap API key
         """
         self.base_url = "http://api.openweathermap.org/data/2.5/forecast"
-        self.api_key = "45376de06a00d425f010657e6ac20fa1"
+        self.api_key = api_key
         self.maseno_coords = {'lat': -0.0036, 'lon': 34.6069}  # Maseno coordinates
         self.crop_data = {
             'maize': {'optimal_temp': (18, 28), 'water_needs': 500, 'risk_temp': 35},
