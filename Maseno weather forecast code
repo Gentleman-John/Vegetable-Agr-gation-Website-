@@ -1,15 +1,16 @@
+
 import os
 import requests
+from datetime import datetime
 
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
 def get_maseno_weather():
     """Fetches weather data for Maseno, Kenya from OpenWeatherMap API."""
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
-    # Maseno coordinates (approximately)
     lat = "0.0075"
     lon = "34.5975"
-    complete_url = f"{base_url}appid={API_KEY}&lat={lat}&lon={lon}"
+    complete_url = f"{base_url}appid={API_KEY}&lat={lat}&lon={lon}&units=metric"
     response = requests.get(complete_url)
     if response.status_code == 200:
         return response.json()
@@ -20,10 +21,51 @@ def get_maseno_weather():
         print(f"Error: API request failed with status code {response.status_code}")
         return None
 
+def analyze_weather(data):
+    """Analyzes weather data and generates insights."""
+    if not data:
+        return
+    
+    temp = data['main']['temp']
+    humidity = data['main']['humidity']
+    wind_speed = data['wind']['speed']
+    description = data['weather'][0]['description']
+    
+    print("\n=== Weather Insights for Maseno ===")
+    print(f"Current Conditions: {description}")
+    print(f"Temperature: {temp}°C")
+    
+    # Temperature analysis
+    if temp > 30:
+        print("☀️ Very hot conditions - suitable for heat-resistant crops")
+    elif temp > 25:
+        print("🌤️ Warm conditions - good for most crops")
+    elif temp > 20:
+        print("🌥️ Mild conditions - ideal for sensitive plants")
+    else:
+        print("❄️ Cool conditions - monitor frost-sensitive crops")
+    
+    # Humidity analysis
+    print(f"\nHumidity: {humidity}%")
+    if humidity > 80:
+        print("💧 High humidity - watch for fungal diseases")
+    elif humidity < 40:
+        print("🏜️ Low humidity - increase irrigation")
+    else:
+        print("✅ Optimal humidity range")
+    
+    # Wind analysis
+    print(f"\nWind Speed: {wind_speed} m/s")
+    if wind_speed > 10:
+        print("🌪️ Strong winds - protect delicate crops")
+    elif wind_speed > 5:
+        print("🍃 Moderate winds - good ventilation")
+    else:
+        print("😊 Light winds - ideal conditions")
+
 if __name__ == "__main__":
     weather_data = get_maseno_weather()
     if weather_data:
-        print(f"Weather in Maseno: {weather_data['weather'][0]['description']}")
-        print(f"Temperature: {weather_data['main']['temp']} K")  #Temperature in Kelvin.
+        analyze_weather(weather_data)
     else:
         print("Error fetching weather data.")
