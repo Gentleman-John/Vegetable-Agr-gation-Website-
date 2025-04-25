@@ -6,8 +6,10 @@ API_KEY = os.getenv("OPENWEATHER_API_KEY")
 def get_maseno_weather():
     """Fetches weather data for Maseno, Kenya from OpenWeatherMap API."""
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
-    city_name = "Maseno,ke"
-    complete_url = f"{base_url}appid={API_KEY}&q={city_name}"
+    # Maseno coordinates (approximately)
+    lat = "0.0075"
+    lon = "34.5975"
+    complete_url = f"{base_url}appid={API_KEY}&lat={lat}&lon={lon}"
     response = requests.get(complete_url)
     if response.status_code == 200:
         return response.json()
